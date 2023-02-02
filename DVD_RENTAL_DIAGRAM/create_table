@@ -1,0 +1,175 @@
+
+CREATE TABLE category
+(
+    category_id  INTEGER PRIMARY KEY,
+    name         CHAR(255) NULL,
+    last_updates CHAR(12)
+);
+
+
+CREATE TABLE film_category
+(
+    film_id      SERIAL PRIMARY KEY,
+    category_id  int REFERENCES category (category_id),
+    last_updates char(12)
+);
+
+create table country
+(
+    country_id  SERIAL PRIMARY KEY,
+    county      CHAR(50),
+    last_update DATE NOT NULL
+);
+
+create table city
+(
+    city_id     SERIAL PRIMARY KEY,
+    city_name   CHAR(50),
+    county_id   int REFERENCES country (country_id),
+    last_update DATE NOT NULL
+);
+
+create table language
+(
+    language_id SERIAL PRIMARY KEY,
+    name        CHAR(50),
+    last_update DATE NOT NULL
+);
+
+create table film
+(
+    film_id          INTEGER Primary Key,
+    title            CHAR(255) NOT NULL,
+    description      text      NULL,
+    release_year     DATE      null,
+    language_id      INT references language (language_id),
+    rental_duration  DATE      NOT NULL,
+    rental_rate      INT       not null,
+    length           INT       not null,
+    replacement_cost FLOAT     not null,
+    rating           INT       null,
+    last_update      DATE      NOT NULL,
+    special_features TEXT      NULL,
+    fulltext         TEXT      NULL
+);
+
+
+create table actor
+(
+    actor_id    SERIAL PRIMARY KEY,
+    first_name  CHAR(50) NOT NULL,
+    last_name   CHAR(50) NOT NULL,
+    last_update DATE     NOT NULL
+);
+
+
+create table film_actor
+(
+    actor_id    INT REFERENCES actor (actor_id),
+    film_id     INT REFERENCES film (film_id),
+    last_update DATE NOT NULL
+);
+
+create table address
+(
+    address_id  SERIAL PRIMARY KEY,
+    address     text     NOT NULL,
+    address2    text     NUll,
+    district    char(50) NOT NULL,
+    city_id     int REFERENCES city (city_id),
+    postal_code INT      NOT NULL,
+    phone       CHAR(15) NOT NULL,
+    last_update DATE     NOT NULL
+);
+
+create table store
+(
+    store_id         SERIAL PRIMARY KEY,
+    manager_staff_id INT  NOT NULL,
+    address_id       int references address (address_id),
+    last_update      DATE NOT NULL
+);
+
+create table inventory
+(
+    inventory_id SERIAL PRIMARY KEY,
+    film_id      int REFERENCES film (film_id),
+    store_id     int references store (store_id),
+    last_update  DATE NOT NULL
+);
+
+
+create table staff
+(
+    staff_id    SERIAL PRIMARY KEY,
+    first_name  CHAR(50),
+    last_name   CHAR(50),
+    picture     bytea,
+    address_id  int REFERENCES address (address_id),
+    email       CHAR(50),
+    store_id    int REFERENCES store (store_id),
+    active      bool default True,
+    username    CHAR(50) NOT NULL,
+    password    CHAR(50) NOT NULL,
+    last_update DATE     NOT NULL
+);
+
+create table customer
+(
+    customer_id SERIAL PRIMARY KEY,
+    store_id    int references store (store_id),
+    first_name  CHAR(50),
+    last_name   CHAR(50),
+    email       char(50),
+    addres_id   int references address (address_id),
+    activebool  bool,
+    create_date DATE NOT NULL,
+    last_update DATE NOT NULL,
+    active      bool
+);
+
+create table rental
+(
+    rental_id    serial primary key,
+    rental_date  DATE NOT NULL,
+    inventory_id int references inventory (inventory_id),
+    customer_id  int references customer (customer_id),
+    return_date  DATE NOT NULL,
+    staff_id     int references staff (staff_id),
+    last_update  DATE not null
+);
+
+create table payment
+(
+    payment_id   SERIAL PRIMARY KEY,
+    customer_id  int references customer (customer_id),
+    staff_id     int references staff (staff_id),
+    rental_id    int references rental (rental_id),
+    amount       int  NOT NULL,
+    payment_date DATE NOT NULL
+);
+
+
+
+
+-- DROP TABLE payment;
+-- DROP TABLE category;
+-- DROP TABLE film_category;
+-- DROP TABLE film_actor;
+-- DROP TABLE language;
+-- DROP TABLE inventory;
+-- DROP TABLE rental;
+-- DROP TABLE staff;
+-- DROP TABLE customer;
+--
+-- DROP TABLE address;
+-- DROP TABLE city;
+-- DROP TABLE country;
+-- DROP TABLE store;
+-- DROP TABLE film;
+-- DROP TABLE actor;
+
+
+
+
+

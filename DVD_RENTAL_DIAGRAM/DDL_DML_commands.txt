@@ -1,0 +1,111 @@
+-- 1) Har bir disk qancha pulga ijaraga berilgan
+
+-- select i.inventory_id, sum(py.amount), count(py.amount) from inventory i
+--   left join rental r 
+--   on i.inventory_id = r.inventory_id
+--   left join  payment py
+--   on r.rental_id = py.rental_id 
+--   group by i.inventory_id
+--   Order By sum(py.amount) DESC;
+
+-- 2) Har bir film qancha pulga ijaraga berilgan
+
+-- select f.title, sum(py.amount) from film f
+--   left join inventory i
+--   on f.film_id = i.film_id
+--   left join rental r 
+--   on i.inventory_id = r.inventory_id
+--   left join  payment py
+--   on r.rental_id = py.rental_id 
+--   group by f.film_id
+--   order by f.title;
+
+-- 3) Har bir xodim qancha pulga disklarni ijaraga bergan
+
+-- select r.staff_id, sum(py.amount) from rental r
+--   left join payment py
+--   on r.staff_id = py.staff_id
+--   group by r.staff_id
+--   order by r.staff_id;
+
+-- select s.first_name, s.last_name, 
+--   sum(py.amount) from staff s
+--   left join payment py
+--   on s.staff_id = py.staff_id
+--   group by s.staff_id
+--   order by s.staff_id;
+
+-- 4) Har bir xodim nechta disk ijaraga bergan
+
+-- select s.first_name, count(r.inventory_id) 
+--   from staff s
+--     left join rental r
+--     on s.staff_id =r.staff_id
+--     group by s.staff_id
+--     order by s.staff_id;
+
+-- 5) Har bir filmda nechta aktyor qatnashgan
+
+-- select f.title, count(a.film_id) as Akyorlar 
+--   from film f
+--   left join film_actor a
+--   on f.film_id = a.film_id
+--   group by f.film_id
+--   having count(a.film_id) > 6 and count(a.film_id) < 8
+--   order by f.film_id;
+
+
+-- SELECT AVG(rental_rate) FROM film;
+
+-- Select title, rental_rate From Film 
+--   where rental_rate > 
+--     (SELECT AVG(rental_rate) FROM film);
+
+-- Select title From Film Where film_id = 
+--   Any(select film_id From Film Where rental_rate > 3);
+
+-- SELECT film_id,title,length
+--   FROM film
+--   WHERE length > Any(SELECT ROUND(AVG (length),2)
+--     FROM film
+--     GROUP BY rating)
+-- ORDER BY length;
+
+-- Select Round(3.47834, 2);
+
+-- Select title, rental_rate, length From Film 
+--   Where length > 100
+-- Union
+-- Select title, rental_rate, length From Film 
+--   Where rental_rate > 3;
+
+-- Select title, rental_rate, length From Film 
+--   Where length > 100 or rental_rate > 3;
+
+
+-- Select title, rental_rate, length From Film 
+--   Where length > 100
+-- Intersect
+-- Select title, rental_rate, length From Film 
+--   Where rental_rate > 3;
+
+-- Select title, length,
+--     Case
+--       When length < 50 Then 'Short'
+--       When length < 120 Then 'Medium'
+--       When length >= 120 Then 'Long'
+--     end duration
+--   From Film
+--   Order By title;
+
+Select title,
+    rating,
+    Case rating
+      When 'G' Then 'General Audiences'
+      When 'PG' Then 'Parental Guidence Suggested'
+      When 'PG-13' Then 'Parents Strongly Cautioned'
+      When 'R' Then 'Restristed'
+      When 'NC-17' Then 'Adults Only'
+    end rating_description
+  From Film
+  Order by title;
